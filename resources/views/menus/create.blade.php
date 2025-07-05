@@ -8,11 +8,11 @@
 </head>
 <body>
     <div class="container py-4">
-        <h1>Tambah Menu Baru</h1>
-        
+        <h1 class="mb-4">Tambah Menu Baru</h1>
+
         @if ($errors->any())
             <div class="alert alert-danger">
-                <ul>
+                <ul class="mb-0">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -20,20 +20,24 @@
             </div>
         @endif
 
-        <form action="/menu" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('menu.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
+
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama Menu</label>
                 <input type="text" class="form-control" id="nama" name="nama" required>
             </div>
+
             <div class="mb-3">
                 <label for="harga" class="form-label">Harga</label>
                 <input type="number" class="form-control" id="harga" name="harga" required>
             </div>
+
             <div class="mb-3">
                 <label for="gambar" class="form-label">Gambar Menu</label>
                 <input type="file" class="form-control" id="gambar" name="gambar" accept="image/*" required>
             </div>
+
             <button type="submit" class="btn btn-primary">Simpan</button>
         </form>
     </div>

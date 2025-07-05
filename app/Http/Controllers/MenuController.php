@@ -10,16 +10,18 @@ class MenuController extends Controller
     // Tampilkan menu untuk pelanggan
     public function index()
     {
-        $menus = Menu::all();
+        $menus = Menu::all(); // ambil semua data dari tabel menus
         return view('menus.index', compact('menus'));
     }
 
+
     // Tampilkan admin menu
-    public function admin()
+    public function adminIndex()
     {
         $menus = Menu::all();
-        return view('menus.admin', compact('menus'));
+        return view('menus.admin', compact('menus')); // <--- INI YANG HARUS DIUBAH
     }
+
 
     // Tampilkan form create
     public function create()
@@ -36,9 +38,11 @@ class MenuController extends Controller
             'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
+        // Simpan ke folder menu_assets
         $imageName = time().'.'.$request->gambar->extension();  
-        $request->gambar->move(public_path('menu'), $imageName);
+        $request->gambar->move(public_path('menu_assets'), $imageName);
 
+        // Simpan ke database
         Menu::create([
             'nama' => $request->nama,
             'harga' => $request->harga,
@@ -47,6 +51,7 @@ class MenuController extends Controller
 
         return redirect('/admin/menu')->with('success', 'Menu berhasil ditambahkan!');
     }
+
 
     // Tampilkan form edit
     public function edit($id)
@@ -67,16 +72,17 @@ class MenuController extends Controller
         $menu = Menu::findOrFail($id);
         
         if($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
+            // Hapus gambar lama
             if($menu->gambar) {
-                $oldImagePath = public_path('menu/').$menu->gambar;
+                $oldImagePath = public_path('menu_assets/').$menu->gambar;
                 if(file_exists($oldImagePath)) {
                     unlink($oldImagePath);
                 }
             }
-            
+
+            // Simpan gambar baru ke menu_assets
             $imageName = time().'.'.$request->gambar->extension();  
-            $request->gambar->move(public_path('menu'), $imageName);
+            $request->gambar->move(public_path('menu_assets'), $imageName);
             $menu->gambar = $imageName;
         }
 
@@ -87,19 +93,22 @@ class MenuController extends Controller
         return redirect('/admin/menu')->with('success', 'Menu berhasil diupdate!');
     }
 
+
     // Hapus menu
     public function destroy($id)
     {
         $menu = Menu::findOrFail($id);
-        
-        // Hapus gambar
-        $imagePath = public_path('menu/').$menu->gambar;
-        if(file_exists($imagePath)) {
+
+        // Hapus gambar dari menu_assets
+        $imagePath = public_path('menu_assets/').$menu->gambar;
+        if (file_exists($imagePath)) {
             unlink($imagePath);
         }
 
+        // Hapus data dari database
         $menu->delete();
-        
+
         return redirect('/admin/menu')->with('success', 'Menu berhasil dihapus!');
     }
+
 }

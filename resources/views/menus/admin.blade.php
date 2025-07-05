@@ -1,64 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Menu</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .menu-img-thumb {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container py-4">
-        <h1 class="mb-4">Kelola Menu</h1>
-        
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
+@extends('layouts.app')
+
+@section('content')
+    <div class="container">
+        <h1>Data Menu Admin</h1>
+        <a href="{{ route('menu.create') }}" class="btn btn-primary mb-3">+ Tambah Menu</a>
+
+        @if (session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        <a href="/menu/create" class="btn btn-primary mb-3">Tambah Menu Baru</a>
-
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Menu</th>
+                    <th>Harga</th>
+                    <th>Gambar</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($menus as $menu)
                     <tr>
-                        <th>No</th>
-                        <th>Gambar</th>
-                        <th>Nama Menu</th>
-                        <th>Harga</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($menus as $index => $menu)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td><img src="{{ asset('menu/'.$menu->gambar) }}" class="menu-img-thumb" alt="{{ $menu->nama }}"></td>
-                        <td>{{ $menu->nama }}</td>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $menu->nama }}</td> <!-- pastikan field-nya 'nama' bukan 'nama_menu' -->
                         <td>Rp {{ number_format($menu->harga, 0, ',', '.') }}</td>
                         <td>
-                            <a href="/menu/{{ $menu->id }}/edit" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="/menu/{{ $menu->id }}" method="POST" class="d-inline">
+                            @if ($menu->gambar)
+                                <img src="{{ asset('menu_assets/' . $menu->gambar) }}" width="80" alt="{{ $menu->nama }}">
+                            @else
+                                Tidak ada gambar
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('menu.edit', $menu->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('menu.destroy', $menu->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus menu ini?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus menu ini?')">Hapus</button>
+                                <button class="btn btn-danger btn-sm">Hapus</button>
                             </form>
                         </td>
                     </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                @empty
+                    <tr><td colspan="5">Belum ada data menu</td></tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection
