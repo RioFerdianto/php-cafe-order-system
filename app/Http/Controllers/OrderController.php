@@ -9,10 +9,15 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     // Tampilkan form order
-    public function create()
+    public function create(Request $request)
     {
-        $menus = Menu::all();
-        return view('orders.create', compact('menus'));
+        $menu = null;
+
+        if ($request->has('menu_id')) {
+            $menu = Menu::find($request->menu_id);
+        }
+
+        return view('orders.create', compact('menu'));
     }
 
     // Simpan order baru

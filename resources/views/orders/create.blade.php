@@ -33,7 +33,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Menu yang Dipilih</label>
                                     <div class="d-flex align-items-center">
-                                        <img src="{{ asset('menu/'.$selectedMenu->gambar) }}" class="img-thumbnail me-3" style="width: 80px; height: 80px; object-fit: cover;" alt="{{ $selectedMenu->nama }}">
+                                        <img src="{{ asset('menu_assets/' . $selectedMenu->gambar) }}" class="img-thumbnail me-3" style="width: 80px; height: 80px; object-fit: cover;" alt="{{ $selectedMenu->nama }}">
                                         <div>
                                             <h5>{{ $selectedMenu->nama }}</h5>
                                             <p class="text-muted mb-0">Rp {{ number_format($selectedMenu->harga, 0, ',', '.') }}</p>
