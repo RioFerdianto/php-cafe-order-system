@@ -8,13 +8,13 @@ use Illuminate\Http\Request;
 class MenuController extends Controller
 {
     // Tampilkan menu untuk pelanggan
-    public function index()
+    public function home()
     {
-        $menus = Menu::all(); // ambil semua data dari tabel menus
-        return view('menus.index', compact('menus'));
+        $menus = \App\Models\Menu::all(); // Pastikan model Menu sudah dibuat dan pakai namespace sesuai
+        return view('home', compact('menus'));
     }
 
-
+    
     // Tampilkan admin menu
     public function adminIndex()
     {
