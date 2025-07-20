@@ -1,47 +1,143 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layouts.app')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('title', 'Login')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+@push('styles')
+<style>
+    .login-section {
+        min-height: calc(100vh - 70px); /* menyesuaikan tinggi karena ada navbar fixed */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        /* Gunakan properti terpisah */
+        background-image: url("{{ asset('menu_assets/bg-login.jpg') }}"); */
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        background-color: #0b3d27; fallback jika gambar gagal */
+    }
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+    .login-section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            rgba(0,0,0,0.45),
+            rgba(0,0,0,0.35)
+        );
+        z-index: 1;
+    }
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+    .login-card {
+        position: relative;
+        z-index: 2;
+        background:rgb(255, 255, 255);
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        padding: 2rem 2.5rem;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        backdrop-filter: blur(2px);
+    }
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+    .login-card h2 {
+        color: #006b3c;
+        font-weight: 700;
+        margin-bottom: 1.3rem;
+    }
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+    .login-card .form-control {
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-size: 15px;
+    }
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    .login-card .btn-login {
+        background: #006b3c;
+        border: none;
+        padding: 11px;
+        border-radius: 10px;
+        font-weight: 600;
+        color: #fff;
+        transition: .25s;
+        letter-spacing: .5px;
+    }
+
+    .login-card .btn-login:hover {
+        background: #005530;
+    }
+
+    .login-card a {
+        color: #006b3c;
+        font-weight: 500;
+        text-decoration: none;
+    }
+    .login-card a:hover {
+        text-decoration: underline;
+    }
+</style>
+@endpush
+
+@section('content')
+<section class="login-section">
+    <div class="login-card">
+        <h2>Login NgopiiKu</h2>
+
+        @if (session('status'))
+            <div class="alert alert-success py-2 px-3">{{ session('status') }}</div>
+        @endif
+
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+
+            {{-- Email --}}
+            <div class="mb-3 text-start">
+                <label for="email" class="form-label">Email</label>
+                <input id="email"
+                       type="email"
+                       name="email"
+                       value="{{ old('email') }}"
+                       required
+                       autofocus
+                       autocomplete="username"
+                       class="form-control @error('email') is-invalid @enderror">
+                @error('email')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- Password --}}
+            <div class="mb-3 text-start">
+                <label for="password" class="form-label">Password</label>
+                <input id="password"
+                       type="password"
+                       name="password"
+                       required
+                       autocomplete="current-password"
+                       class="form-control @error('password') is-invalid @enderror">
+                @error('password')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- Remember --}}
+            <div class="form-check text-start mb-3">
+                <input class="form-check-input" type="checkbox" id="remember_me" name="remember">
+                <label class="form-check-label" for="remember_me">Ingat Saya</label>
+            </div>
+
+            <button type="submit" class="btn btn-login w-100">Login</button>
+
+            <div class="mt-3">
+                <p class="mb-0" style="font-size: .9rem;">
+                    Belum punya akun?
+                    <a href="{{ route('register') }}">Daftar disini</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</section>
+@endsection

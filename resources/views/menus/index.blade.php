@@ -1,61 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Kami</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+@extends('layouts.app')
 
-    <style>
-        .menu-card {
-            transition: transform 0.3s;
-            margin-bottom: 20px;
-        }
+@section('title', 'Menu')
 
-        .menu-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .menu-img {
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .hero-section {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-                        url('{{ asset('menu_assets/ngopi-header.png') }}');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 100px 0;
-            margin-bottom: 50px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="hero-section">
-        <h1>Menu Ngopiiku</h1>
-        <p class="lead">Nikmati berbagai pilihan minuman berkualitas</p>
-    </div>
-
-    <div class="container">
-        <div class="row">
-            @foreach($menus as $menu)
-            <div class="col-md-4">
-                <div class="card menu-card">
-                    <img src="{{ asset('menu_assets/'.$menu->gambar) }}" class="card-img-top menu-img" alt="{{ $menu->nama }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $menu->nama }}</h5>
-                        <p class="card-text text-muted">Rp {{ number_format($menu->harga, 0, ',', '.') }}</p>
-                        <a href="/order?menu_id={{ $menu->id }}" class="btn btn-primary">Pesan Sekarang</a>
-                    </div>
-                </div>
-            </div>
-            @endforeach
+@section('content')
+    {{-- Hero Menu --}}
+    <section class="py-5 text-center" style="background:#f0f3f0;">
+        <div class="container">
+            <h1 class="fw-bold text-success display-5 mb-3">Menu NgopiiKu</h1>
+            <p class="lead text-muted">Nikmati berbagai pilihan kopi terbaik dari kami</p>
         </div>
-    </div>
+    </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    {{-- Grid Menu --}}
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="row g-4">
+                @forelse ($menus as $menu)
+                    <div class="col-12 col-md-4">
+                        <div class="card h-100 shadow-sm border-0">
+                            <img src="{{ asset('menu_assets/' . $menu->gambar) }}"
+                                 alt="{{ $menu->nama }}"
+                                 class="card-img-top"
+                                 style="height:200px;object-fit:cover;">
+                            <div class="card-body d-flex flex-column text-center">
+                                <h5 class="card-title fw-bold">{{ $menu->nama }}</h5>
+                                <p class="text-success fw-semibold mb-4">
+                                    Rp {{ number_format($menu->harga, 0, ',', '.') }}
+                                </p>
+                                <a href="{{ auth()->check() ? route('order.create') : route('login') }}"
+                                   class="btn btn-success mt-auto">
+                                    Pesan Sekarang
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-12">
+                        <p class="text-center text-muted">Belum ada menu tersedia.</p>
+                    </div>
+                @endforelse
+            </div>
+            
+        </div>
+    </section>
+@endsection

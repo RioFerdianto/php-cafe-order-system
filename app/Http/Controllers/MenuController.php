@@ -8,10 +8,10 @@ use Illuminate\Http\Request;
 class MenuController extends Controller
 {
     // Tampilkan menu untuk pelanggan
-    public function home()
+    public function index()
     {
-        $menus = \App\Models\Menu::all(); // Pastikan model Menu sudah dibuat dan pakai namespace sesuai
-        return view('home', compact('menus'));
+        $menus = Menu::all(); // ambil semua menu kopi
+        return view('menus.index', compact('menus'));
     }
 
     

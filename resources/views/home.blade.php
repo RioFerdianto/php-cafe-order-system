@@ -1,83 +1,137 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>NgopiiKu - Selamat Datang</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+@extends('layouts.app')
 
-    <!-- Header/Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ url('/') }}">NgopiiKu</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url('/') }}">Beranda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url('/tentang') }}">Tentang Kami</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url('/kontak') }}">Kontak</a>
-                    </li>
-                    @auth
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ url('/profile') }}">Profil</a>
-                        </li>
-                        <li class="nav-item">
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button class="nav-link btn btn-link text-white" type="submit">Logout</button>
-                            </form>
-                        </li>
-                    @else
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('login') }}">Login</a>
-                        </li>
-                    @endauth
-                </ul>
+@section('title', 'Beranda')
+
+@push('styles')
+<style>
+    body {
+        background:#fafafa;
+        color:#333;
+        font-family:'Poppins', sans-serif;
+    }
+
+    /* HERO */
+    .hero {
+        display:flex;
+        flex-wrap:wrap;
+        align-items:center;
+        justify-content:center;
+        padding:80px 20px;
+        background:#F8F8F6;
+        color:#004D3A;
+        text-align:left;
+    }
+    .hero img {
+        width:360px;
+        border-radius:10px;
+        margin:20px;
+    }
+    .hero-text {
+        max-width:500px;
+        margin:20px;
+    }
+    .hero-text h1 {
+        font-size:2.8rem;
+        font-weight:700;
+        margin-bottom:15px;
+        color:#004D3A;
+    }
+    .hero-text p {
+        font-size:1.1rem;
+        margin-bottom:20px;
+        color:#5C6654;
+    }
+    .btn-primary {
+        padding:10px 22px;
+        background:#006644;
+        color:#fff;
+        text-decoration:none;
+        border-radius:5px;
+        font-weight:600;
+    }
+    .btn-primary:hover {
+        background:#004D3A;
+    }
+
+    /* Tentang Kami */
+    .section {
+        padding:60px 20px;
+        text-align:center;
+    }
+    .section h2 {
+        font-size:2rem;
+        color:#004D3A;
+        margin-bottom:20px;
+    }
+    .section p {
+        max-width:800px;
+        margin:auto;
+        font-size:1.1rem;
+        line-height:1.7;
+        color:#555;
+    }
+
+    /* Testimoni */
+    .testimoni {
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+        gap:20px;
+        margin-top:30px;
+    }
+    .card {
+        background:white;
+        padding:20px;
+        border-radius:10px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.05);
+        text-align: center; /* Biar semua konten di tengah */
+    }
+    .card img {
+        width:80px;
+        height:80px;
+        border-radius:50%;
+        object-fit:cover;
+        margin:0 auto 10px; /* Auto biar img center */
+        display:block;
+    }
+</style>
+@endpush
+
+@section('content')
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Kopi Premium, Rasa Istimewa</h1>
+            <p>NgopiiKu menyajikan kopi pilihan dengan cita rasa terbaik khas Indonesia.</p>
+            <a href="{{ url('/menu') }}" class="btn-primary">Lihat Menu</a>
+        </div>
+        <img src="{{ asset('menu_assets/hero-kopi.jpg') }}" alt="Kopi NgopiiKu">
+    </section>
+
+    <!-- Tentang Kami -->
+    <section id="tentang" class="section">
+        <h2>Tentang Kami</h2>
+        <p>NgopiiKu lahir dari kecintaan pada kopi Indonesia. Sejak 2015, kami berkomitmen untuk memberikan rasa kopi terbaik dengan bahan pilihan yang diproses secara profesional.</p>
+    </section>
+
+    <!-- Testimoni -->
+    <section class="section">
+        <h2>Testimoni Pelanggan</h2>
+        <div class="testimoni">
+            <div class="card">
+                <img src="{{ asset('menu_assets/testi1.jpg') }}" alt="Andi">
+                <p>"Rasanya enak banget, bikin nagih!"</p>
+                <strong>- Andi, Jakarta</strong>
+            </div>
+            <div class="card">
+                <img src="{{ asset('menu_assets/testi2.jpg') }}" alt="Sinta">
+                <p>"Pelayanan cepat, kopinya segar."</p>
+                <strong>- Sinta, Bandung</strong>
+            </div>
+            <div class="card">
+                <img src="{{ asset('menu_assets/testi3.jpg') }}" alt="Rudi">
+                <p>"Kopi pagi saya selalu dari NgopiiKu."</p>
+                <strong>- Rudi, Surabaya</strong>
             </div>
         </div>
-    </nav>
-
-
-    <!-- Hero Section -->
-    <div class="container text-center my-5">
-        <h1 class="display-5 fw-bold text-success">Selamat Datang di NgopiiKu</h1>
-        <p class="lead">Nikmati racikan kopi terbaik khas Indonesia</p>
-    </div>
-
-    <!-- Daftar Menu Kopi -->
-    <div class="container">
-        <div class="row">
-            @forelse($menus as $menu)
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        {{-- Tambahkan gambar jika tersedia --}}
-                        <img src="{{ asset('menu_assets/' . $menu->gambar) }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ $menu->nama }}">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">{{ $menu->nama }}</h5>
-                            <p class="card-text">Harga: Rp{{ number_format($menu->harga) }}</p>
-                            <a href="{{ auth()->check() ? url('/order') : route('login') }}" class="btn btn-success w-100">
-                                Pesan Sekarang
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <p class="text-center">Belum ada menu kopi tersedia.</p>
-            @endforelse
-        </div>
-    </div>
-
-    <footer class="text-center mt-5 py-4 bg-light border-top">
-        <small>NgopiiKu &copy; {{ date('Y') }} | Semua hak dilindungi</small>
-    </footer>
-
-</body>
-</html>
+    </section>
+@endsection

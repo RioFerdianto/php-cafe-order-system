@@ -8,10 +8,5 @@ class HomeController extends Controller
     {
         return view('home');
     }
-    public function home()
-    {
-        $menus = Menu::all(); // Ambil semua kopi
-        return view('home', compact('menus'));
-    }
-
+    
 }

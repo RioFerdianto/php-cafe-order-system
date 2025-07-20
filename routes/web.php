@@ -6,11 +6,19 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 // Halaman Awal
-Route::get('/', [MenuController::class, 'home'])->name('home');
-Route::view('/tentang', 'tentang')->name('tentang');
-Route::view('/kontak', 'kontak')->name('kontak');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
+
+// Register
+Route::get('/register', [RegisteredUserController::class, 'create'])
+    ->middleware('guest')
+    ->name('register');
+
+Route::post('/register', [RegisteredUserController::class, 'store'])
+    ->middleware('guest');
 
 // Dashboard (untuk user login)
 Route::get('/dashboard', function () {
@@ -25,13 +33,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Order kopi
-    Route::get('/order', [OrderController::class, 'create']);
-    Route::post('/order', [OrderController::class, 'store']);
-    Route::get('/order/success', [OrderController::class, 'success']);
+    Route::get('/order', [OrderController::class, 'create'])->name('order.create');
+    Route::post('/order', [OrderController::class, 'store'])->name('order.store');
+    Route::get('/order/success', [OrderController::class, 'success'])->name('order.success');
 
-    // Admin panel (kalau admin dibedakan nanti bisa tambahkan middleware khusus)
+    // Admin panel
     Route::get('/admin', [AdminController::class, 'index']);
     Route::post('/admin/order/{id}/status', [AdminController::class, 'updateStatus']);
+
+    //profil
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // Menu (tidak wajib login)

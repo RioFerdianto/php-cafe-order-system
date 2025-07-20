@@ -43,8 +43,12 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+         // TIDAK dipanggil: Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Redirect ke login dengan flash message
+        return redirect()
+            ->route('login')
+            ->with('status', 'Akun berhasil dibuat. Silakan login menggunakan email & password Anda.');
+    
     }
 }

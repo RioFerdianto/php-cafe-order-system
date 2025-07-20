@@ -1,52 +1,135 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+@extends('layouts.app')
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
+@section('title', 'Register')
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+@push('styles')
+<style>
+    .register-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: url('{{ asset('menu_assets/bg-login.jpg') }}') no-repeat center center;
+        background-size: cover;
+        position: relative;
+    }
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+    .register-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1;
+    }
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+    .register-card {
+        position: relative;
+        z-index: 2;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        padding: 2rem 2.5rem;
+        max-width: 450px;
+        width: 100%;
+        text-align: center;
+    }
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+    .register-card h2 {
+        color: #006b3c;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+    }
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+    .register-card .form-control {
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 15px;
+    }
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+    .register-card .btn-register {
+        background: #006b3c;
+        border: none;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #fff;
+        transition: 0.3s;
+    }
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+    .register-card .btn-register:hover {
+        background: #005d35;
+    }
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+    .register-card a {
+        color: #006b3c;
+        text-decoration: none;
+    }
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    .register-card a:hover {
+        text-decoration: underline;
+    }
+</style>
+@endpush
+
+@section('content')
+<section class="register-section">
+    <div class="register-card">
+        <h2>Buat Akun NgopiiKu</h2>
+        <form method="POST" action="{{ route('register') }}">
+            @csrf
+
+            {{-- Nama --}}
+            <div class="mb-3 text-start">
+                <label for="name" class="form-label">Nama Lengkap</label>
+                <input id="name" type="text" name="name" value="{{ old('name') }}"
+                       required autofocus autocomplete="name"
+                       class="form-control @error('name') is-invalid @enderror">
+                @error('name')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- Email --}}
+            <div class="mb-3 text-start">
+                <label for="email" class="form-label">Email</label>
+                <input id="email" type="email" name="email" value="{{ old('email') }}"
+                       required autocomplete="username"
+                       class="form-control @error('email') is-invalid @enderror">
+                @error('email')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- Password --}}
+            <div class="mb-3 text-start">
+                <label for="password" class="form-label">Password</label>
+                <input id="password" type="password" name="password" required
+                       autocomplete="new-password"
+                       class="form-control @error('password') is-invalid @enderror">
+                @error('password')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- Konfirmasi Password --}}
+            <div class="mb-3 text-start">
+                <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                <input id="password_confirmation" type="password" name="password_confirmation" required
+                       autocomplete="new-password" class="form-control">
+            </div>
+
+            {{-- Tombol Register --}}
+            <button type="submit" class="btn btn-register w-100">Daftar</button>
+
+            <div class="mt-3">
+                <p>Sudah punya akun?
+                    <a href="{{ route('login') }}">Login disini</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</section>
+@endsection
